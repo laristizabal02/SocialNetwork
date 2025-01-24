@@ -36,6 +36,8 @@ const names = [
     'No podria estar mas de acuerdo',
     'Excelente!',
   ];
+
+
   
   // Get a random item from an array
   export const getRandomArrItem = (arr: any[]) => arr[Math.floor(Math.random() * arr.length)];

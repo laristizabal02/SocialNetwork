@@ -36,6 +36,23 @@ connection.once('open', async () => {
         randomUser.thoughts.push(createdThought._id);
         await randomUser.save();
     }
+    for (const user of createdUsers) {
+        const friends = [];
+        const numberOfFriends = Math.floor(Math.random() * 5); // Random number of friends (0–4)
+        for (let i = 0; i < numberOfFriends; i++) {
+            let randomFriend;
+            // Ensure a user cannot be friends with themselves and avoid duplicates
+            do {
+                randomFriend = getRandomArrItem(createdUsers);
+            } while (randomFriend._id.equals(user._id) || // Prevent self-friendship
+                friends.includes(randomFriend._id) // Prevent duplicate friends
+            );
+            friends.push(randomFriend._id);
+        }
+        // Update user's friends array
+        user.friends = friends;
+        await user.save();
+    }
     console.table(users);
     console.table(thoughts);
     console.info('Seeding complete! 🌱');

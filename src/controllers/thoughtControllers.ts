@@ -113,4 +113,45 @@ export const thoughtController = {
       return res.status(500).json(err);
     }
   },
+  async getAllReactions(req: Request, res: Response) {
+    try {
+      const { thoughtId } = req.params;
+  
+      // Fetch the specific thought and its reactions
+      const thought = await Thought.findById(thoughtId);
+  
+      // If the thought is not found, return a 404 error
+      if (!thought) {
+        return res.status(404).json({ message: 'No thought found with this ID' });
+      }
+  
+      // Return the thought's reactions
+      return res.json(thought.reactions);
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  },
+
+  async getReactionById(req: Request, res: Response) {
+    try {
+      // Find the thought by its ID
+      const thought = await Thought.findById(req.params.thoughtId);
+      if (!thought) {
+        return res.status(404).json({ message: 'No thought found with this ID' });
+      }
+
+      // Find the reaction within the thought's reactions array
+      const reaction = thought.reactions.find(
+        (reaction: any) => reaction._id.toString() === req.params.reactionId
+      );
+
+      if (!reaction) {
+        return res.status(404).json({ message: 'No reaction found with this ID' });
+      }
+
+      return res.json(reaction);
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  },
 };
